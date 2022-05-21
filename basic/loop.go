@@ -3,8 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
+	"strings"
 )
 
 //十进制转二进制：除以2反序取余
@@ -25,8 +27,12 @@ func printFile(filename string) {
 	if err != nil {
 		panic(err)
 	}
+	printFileContents(file)
 
-	scanner := bufio.NewScanner(file)
+}
+
+func printFileContents(reader io.Reader) {
+	scanner := bufio.NewScanner(reader)
 	for scanner.Scan() { //相当于while
 		fmt.Println(scanner.Text())
 	}
@@ -39,5 +45,14 @@ func main() {
 		convertToBinary(0),
 	)
 
-	printFile("abc.txt")
+	printFile("basic/abc.txt")
+	s := `abc"d"
+			fsdkla
+
+fsadf
+fdasdf
+gggg
+`
+	printFileContents(strings.NewReader(s))
+
 }
