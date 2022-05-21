@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"mooc_Go_study/filelisteningserver/filelist"
 	"net/http"
 	"os"
@@ -13,6 +14,13 @@ func errWrapper(
 	handler appHandler) func(http.ResponseWriter, *http.Request) {
 	return func(writer http.ResponseWriter,
 		request *http.Request) {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Printf("panic: %v", r)
+				http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+			}
+		}()
+
 		err := handler(writer, request)
 		if err != nil {
 			code := http.StatusOK
